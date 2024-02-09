@@ -49,8 +49,14 @@ class Interface:
         self.__visor.set_text(self.expression)
 
     def InserirDigito(self, tecla):
-        self.set_expression(tecla)
-        self.AtualizarVisor()
+        array = ["*", "/", "+", "-", "^", "sqrt", "+/-", "1/x", "."]
+        if tecla == '.' and self.expression == "0":
+            self.expression = "0."
+        elif tecla in array and self.expression[len(self.expression)-1] in array:
+            self.expression[len(self.expression)-1] = tecla[0]
+        else:
+            self.set_expression(tecla)
+            self.AtualizarVisor()
 
     def Calcular(self):
         expression_math = self.expression + " = "
@@ -64,6 +70,11 @@ class Interface:
         else:
             self.expression = "0"
             self.clear = False
+        self.AtualizarVisor()
+
+    def Limpar(self):
+        self.expression = "0"
+        self.clear = False
         self.AtualizarVisor()
 
     class Titulo:
@@ -115,7 +126,8 @@ class Interface:
             self.igual = Button(self.frame, text="=", width=coord_x, height=coord_y, command=self.interface.Calcular)
             self.virgula = Button(self.frame, text=",", width=coord_x, height=coord_y,
                                   command=lambda: self.interface.InserirDigito("."))
-            self.delete = Button(self.frame, text="Del", width=45, command=self.interface.Deletar)
+            self.delete = Button(self.frame, text="Del", width=22, command=self.interface.Deletar)
+            self.limpar = Button(self.frame, text="C", width=22, command=self.interface.Limpar)
 
             self.somar = Button(self.frame, text="+", width=coord_x, height=coord_y,
                                 command=lambda: self.interface.InserirDigito("+"))
@@ -142,7 +154,8 @@ class Interface:
             self.nine.grid(row=2, column=2)
             self.igual.grid(row=5, column=3)
             self.virgula.grid(row=5, column=2)
-            self.delete.grid(row=0, column=0, columnspan=4)
+            self.limpar.grid(row=0, column=0, columnspan=2)
+            self.delete.grid(row=0, column=2, columnspan=2)
             self.somar.grid(row=4, column=3)
             self.diminuir.grid(row=3, column=3)
             self.multiplicar.grid(row=2, column=3)
